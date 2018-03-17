@@ -7,6 +7,9 @@ int CommStat ;
 int ModEau = 0 ;
 int ModCafe = 0 ;
 int ModSucre = 0 ;
+int CafeSpeed ;
+int SucreSpeed ;
+int EauSpeed ;
 
 void setup(){
   Serial.begin(9600) ; //ordi
