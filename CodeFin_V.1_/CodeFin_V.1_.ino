@@ -20,7 +20,7 @@ int Confirmationbut = 11 ;
 int CommEau = 0 ;
 int CommCafe = 0 ;
 int CommSucre = 0 ;
-int Confirmation = 0;
+int Confirmation = 0 ;
 
 int StateCommG[3] ;
 
@@ -46,7 +46,7 @@ void setup() {
   Serial.println("Fin Setup") ;
 }
 
-  int ModStateComm(int Eau, int Cafe, int Sucre){
+int ModStateComm(int Eau, int Cafe, int Sucre){//fonction du changement des states du café, du sucre et de l'eau
   if(Eau == 1){
     if(StateCommG[0] < 5)
     StateCommG[0]++ ;
@@ -96,7 +96,7 @@ void loop() {
   Serial.print(" , Confirmation : ") ;
   Serial.println(Confirmation) ;
 
-  while(pressbut == 1){
+  while(pressbut == 1){ //acquisition d'une entrée...
     if(CommEau == 0 && CommCafe == 0 && CommSucre == 0 || Confirmation == 1){
       pressbut = 0 ;
     }
