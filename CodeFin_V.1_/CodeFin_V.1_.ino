@@ -11,10 +11,10 @@ int i ;
 int pressbut = 0 ;
 
   //init variables broches : 
-int Eaubut = 8 ;
-int Cafebut = 9 ;
-int Sucrebut = 10 ;
-int Confirmationbut = 11 ;
+int Eaubut = 49 ;
+int Cafebut = 50 ;
+int Sucrebut = 51 ;
+int Confirmationbut = 48 ;
 
   //init variables commandes :
 int CommEau = 0 ;
@@ -42,11 +42,12 @@ void setup() {
   pinMode(Eaubut, INPUT) ;
   pinMode(Cafebut, INPUT) ;
   pinMode(Sucrebut, INPUT) ;
-  pinMode(Confirmationbut, INPUT) ;
+  pinMode(Confirmationbut, OUTPUT) ;
   Serial.println("Fin Setup") ;
 }
 
-int ModStateComm(int Eau, int Cafe, int Sucre){//fonction du changement des states du café, du sucre et de l'eau
+void ModStateComm(int Eau, int Cafe, int Sucre){//fonction du changement des states du café, du sucre et de l'eau
+  
   if(Eau == 1){
     if(StateCommG[0] < 5)
     StateCommG[0]++ ;
@@ -67,7 +68,7 @@ int ModStateComm(int Eau, int Cafe, int Sucre){//fonction du changement des stat
     else
     StateCommG[2] = 0 ;
   }
-  return StateCommG ;
+//  return StateCommG ;
 }
 
 void loop() {
@@ -96,8 +97,8 @@ void loop() {
   Serial.print(" , Confirmation : ") ;
   Serial.println(Confirmation) ;
 
-  while(pressbut == 1){ //acquisition d'une entrée...
-    if(CommEau == 0 && CommCafe == 0 && CommSucre == 0 || Confirmation == 1){
+  while(pressbut == 1){
+    if(CommEau == 0 && CommCafe == 0 && CommSucre == 0 && Confirmation == 0){
       pressbut = 0 ;
     }
     CommEau = digitalRead(Eaubut) ;
