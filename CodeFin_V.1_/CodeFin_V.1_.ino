@@ -11,17 +11,17 @@ int i ;
 int pressbut = 0 ;
 
   //init variables broches : 
-int Eaubut = 49 ;
-int Cafebut = 50 ;
-int Sucrebut = 51 ;
-int Confirmationbut = 48 ;
+int Eaubut = 8 ;
+int Cafebut = 9 ;
+int Sucrebut = 10 ;
+int Confirmationbut = 11 ;
 
   //init variables commandes :
-int CommEau = 0 ;
-int CommCafe = 0 ;
-int CommSucre = 0 ;
-int Confirmation = 0 ;
+int confirmation = 0 ;
+int butState[3] ;
+int lastButState[3] ;
 
+ //init states doses café :
 int StateCommG[3] ;
 
 
@@ -35,6 +35,10 @@ void setup() {
   StateCommG[0] = 1 ;
   StateCommG[1] = 1 ;
   StateCommG[2] = 0 ;
+
+  for(i=0; i<=3; i++){
+      lastButState[i] = 0 ;
+  }
 /*  for(i = 23; i <= 35; i++){
     pinMode(i, OUTPUT) ;
   }*/
@@ -68,42 +72,33 @@ void ModStateComm(int Eau, int Cafe, int Sucre){//fonction du changement des sta
     else
     StateCommG[2] = 0 ;
   }
-//  return StateCommG ;
 }
 
 void loop() {
-  if(pressbut == 0){
-    while((CommEau == 0 || CommCafe == 0 || CommSucre == 0 || Confirmation == 0) && pressbut == 0){
-      CommEau = digitalRead(Eaubut) ;
-      CommCafe = digitalRead(Cafebut) ;
-      CommSucre = digitalRead(Sucrebut) ;
-      Confirmation = digitalRead(Confirmationbut) ;
-      if(CommEau == 1 || CommCafe == 1 || CommSucre == 1 || Confirmation == 1){
-        pressbut = 1 ;
-      }
+  butState[0] = digitalRead(Eaubut) ;
+  butState[1] = digitalRead(Cafebut) ;
+  butState[2] = digitalRead(Sucrebut) ;
+  confirmation = digitalRead(Confirmationbut) ;
+
+  if(butState[0] != lastButState[0] || butState[1] != lastButState[1] || butState[2] != lastButState[2]){
+    if(butState[0] == HIGH || butState[1] == HIGH || butState[2] == HIGH){
+      ModStateComm(butState[0], butState[1], butState[2]) ;
     }
   }
-  
-  if(CommEau == 1 || CommCafe == 1 || CommSucre == 1){
-    ModStateComm(CommEau, CommCafe, CommSucre) ;
-  }
 
-  Serial.print("Dose Eau : ") ;
-  Serial.print(StateCommG[0]) ;
-  Serial.print(" , Dose Cafe : ") ;
-  Serial.print(StateCommG[1]) ;
-  Serial.print(" , Dose Sucre : ") ;
-  Serial.print(StateCommG[2]) ;
-  Serial.print(" , Confirmation : ") ;
-  Serial.println(Confirmation) ;
+  lastButState[0] = butState[0] ;
+  lastButState[1] = butState[1] ;
+  lastButState[2] = butState[2] ;
 
-  while(pressbut == 1){
-    if(CommEau == 0 && CommCafe == 0 && CommSucre == 0 && Confirmation == 0){
-      pressbut = 0 ;
-    }
-    CommEau = digitalRead(Eaubut) ;
-    CommCafe = digitalRead(Cafebut) ;
-    CommSucre = digitalRead(Sucrebut) ;
-    Confirmation = digitalRead(Confirmationbut) ;
+
+  if(confirmation == HIGH || butState[0] == HIGH || butState[1] == HIGH || butState[2] == HIGH){
+    Serial.print("Dose Eau : ") ;
+    Serial.print(StateCommG[0]) ;
+    Serial.print(" , Dose Cafe : ") ;
+    Serial.print(StateCommG[1]) ;
+    Serial.print(" , Dose Sucre : ") ;
+    Serial.print(StateCommG[2]) ;
+    Serial.print(" , confirmation : ") ;
+    Serial.println(confirmation) ;
   }
 }
