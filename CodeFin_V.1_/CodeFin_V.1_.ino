@@ -2,24 +2,25 @@
 #include <AFMotor.h>
 
   //init port Serie bluetooth
-//int Rx = 52 ;
-//int Tx = 53 ;
-//SoftwareSerial blue(Rx, Tx) ;
+const int Rx = 23 ;
+const int Tx = 22 ;
+SoftwareSerial blue(Rx, Tx) ;
 
   //init variables divers : 
 int i ;
 int pressbut = 0 ;
 
   //init variables broches : 
-int Eaubut = 8 ;
-int Cafebut = 9 ;
-int Sucrebut = 10 ;
-int Confirmationbut = 11 ;
+int Eaubut = 50 ;
+int Cafebut = 51 ;
+int Sucrebut = 52 ;
+int Confirmationbut = 53 ;
 
   //init variables commandes :
 int confirmation = 0 ;
 int butState[3] ;
 int lastButState[3] ;
+int blueState ;
 
  //init states doses café :
 int StateCommG[3] ;
@@ -30,6 +31,7 @@ int StateCommG[3] ;
 
 void setup() {
   Serial.begin(9600) ;
+  blue.begin(9600) ;
   Serial.println("") ;
   Serial.println("Setup...") ;
   StateCommG[0] = 1 ;
@@ -39,9 +41,6 @@ void setup() {
   for(i=0; i<=3; i++){
       lastButState[i] = 0 ;
   }
-/*  for(i = 23; i <= 35; i++){
-    pinMode(i, OUTPUT) ;
-  }*/
   
   pinMode(Eaubut, INPUT) ;
   pinMode(Cafebut, INPUT) ;
@@ -50,7 +49,7 @@ void setup() {
   Serial.println("Fin Setup") ;
 }
 
-void ModStateComm(int Eau, int Cafe, int Sucre){//fonction du changement des states du café, du sucre et de l'eau
+void ModStateComm(int Eau, int Cafe, int Sucre){//fonction de changement des states de doses pour la commande manuelle
   
   if(Eau == 1){
     if(StateCommG[0] < 5)
@@ -74,12 +73,21 @@ void ModStateComm(int Eau, int Cafe, int Sucre){//fonction du changement des sta
   }
 }
 
+void ModStateBlue(int State){//fonction de changement des states de doses de la commande bluetooth
+  Serial.println("Valeur bluetooth") ;
+}
+
 void loop() {
   butState[0] = digitalRead(Eaubut) ;
   butState[1] = digitalRead(Cafebut) ;
   butState[2] = digitalRead(Sucrebut) ;
   confirmation = digitalRead(Confirmationbut) ;
+  blueState = blue.read() ;
 
+  if(blueState != -1){
+    ModStateBlue(blueState) ;
+  }
+  
   if(butState[0] != lastButState[0] || butState[1] != lastButState[1] || butState[2] != lastButState[2]){
     if(butState[0] == HIGH || butState[1] == HIGH || butState[2] == HIGH){
       ModStateComm(butState[0], butState[1], butState[2]) ;
