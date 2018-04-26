@@ -2,9 +2,9 @@
 #include <AFMotor.h>
 
   //init port Serie bluetooth
-const int Rx = 23 ;
-const int Tx = 22 ;
-SoftwareSerial blue(Rx, Tx) ;
+//const int Rx = 23 ;
+//const int Tx = 22 ;
+//SoftwareSerial blue(Rx, Tx) ;
 
   //init variables divers : 
 int i ;
@@ -18,6 +18,7 @@ int Confirmationbut = 53 ;
 
   //init variables commandes :
 int confirmation = 0 ;
+
 int butState[3] ;
 int lastButState[3] ;
 int blueState ;
@@ -37,6 +38,10 @@ void setup() {
   StateCommG[0] = 1 ;
   StateCommG[1] = 1 ;
   StateCommG[2] = 0 ;
+
+  for(i=22; i<=24; i++){
+    pinMode(i, OUTPUT) ;
+  }
 
   for(i=0; i<=3; i++){
       lastButState[i] = 0 ;
@@ -73,20 +78,20 @@ void ModStateComm(int Eau, int Cafe, int Sucre){//fonction de changement des sta
   }
 }
 
-void ModStateBlue(int State){//fonction de changement des states de doses de la commande bluetooth
+/*void ModStateBlue(int State){//fonction de changement des states de doses de la commande bluetooth
   Serial.println("Valeur bluetooth") ;
-}
+}*/
 
 void loop() {
   butState[0] = digitalRead(Eaubut) ;
   butState[1] = digitalRead(Cafebut) ;
   butState[2] = digitalRead(Sucrebut) ;
   confirmation = digitalRead(Confirmationbut) ;
-  blueState = blue.read() ;
+//  blueState = blue.read() ;
 
-  if(blueState != -1){
+/*  if(blueState != -1){
     ModStateBlue(blueState) ;
-  }
+  }*/
   
   if(butState[0] != lastButState[0] || butState[1] != lastButState[1] || butState[2] != lastButState[2]){
     if(butState[0] == HIGH || butState[1] == HIGH || butState[2] == HIGH){

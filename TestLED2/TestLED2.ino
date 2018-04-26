@@ -1,18 +1,32 @@
-int posLED = 22 ;
+int posLEDCafe = 22 ;
+int CafeBut = 51 ;
+int i ;
 
 void setup() {
   Serial.begin(9600) ;
-  pinMode(22, OUTPUT) ;
-  pinMode(23, OUTPUT) ;
-  pinMode(24, OUTPUT) ;
+  
+  pinMode(CafeBut, INPUT) ;
+  
+  for(i=22; i<=24; i++){
+    pinMode(i, OUTPUT) ;
+  }
+  digitalWrite(22, HIGH) ;
+}
+
+void SwitchCafe(int pos){
+  digitalWrite(posLEDCafe, LOW) ;
+  if(posLEDCafe <= 24){
+    posLEDCafe++ ;
+    }
+  if(posLEDCafe > 24){
+    posLEDCafe = 22 ;
+    }
+  digitalWrite(posLEDCafe, HIGH) ;
+  delay(200) ;
 }
 
 void loop() {
-  digitalWrite(posLED, HIGH) ;
-  delay(100) ;
-  digitalWrite(posLED, LOW) ;
-  posLED++ ;
-  if(posLED == 25){
-    posLED = 22 ;
+  if(digitalRead(CafeBut) == 1){
+    SwitchCafe(posLEDCafe) ;
   }
 }
