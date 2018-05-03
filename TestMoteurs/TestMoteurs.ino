@@ -1,14 +1,18 @@
 #include <AFMotor.h>
 
-AF_Stepper Cafe(2, 200) ;
+
+AF_Stepper cafe(200, 1);
 
 
 void setup() {
-  Cafe.setSpeed(100) ;
+  Serial.begin(9600);           // set up Serial library at 9600 bps
+  Serial.println("Stepper test!");
+  
+  cafe.setSpeed(150);
 }
-
+ 
 void loop() {
-  Cafe.step(200, FORWARD, DOUBLE) ;
-  Cafe.release() ;
+  cafe.step(5000, FORWARD, DOUBLE) ;
+  cafe.release() ;
   delay(1000) ;
 }
