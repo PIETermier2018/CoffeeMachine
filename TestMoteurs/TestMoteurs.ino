@@ -8,7 +8,7 @@ void setup() {
   Serial.begin(9600);           // set up Serial library at 9600 bps
   Serial.println("Stepper test!");
   
-  cafe.setSpeed(150);
+  cafe.setSpeed(100);
 }
  
 void loop() {
