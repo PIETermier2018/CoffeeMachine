@@ -40,12 +40,13 @@ void setup() {
   
   Cafe.setSpeed(100) ;
   Sucre.setSpeed(100) ;
-  
+
+  //Setup sélection dose :
   StateCommG[0] = 1 ;
   StateCommG[1] = 1 ;
   StateCommG[2] = 0 ;
-  //Setup temps de chauffe/nombre de pas :
   
+  //Setup temps de chauffe/nombre de pas :
   TempsChauff[0] = 251100 ;
   TempsChauff[1] = 502200 ;
   TempsChauff[2] = 753300 ;
@@ -89,7 +90,7 @@ void ModStateComm(int Eau, int Cafe, int Sucre){ //fonction de changement des st
     if (StateCommG[1] < 3) {
       StateCommG[1]++ ;
     }
-    else
+    else b 
       StateCommG[1] = 1 ;
   }
   if (Sucre == 1) {
