@@ -15,6 +15,9 @@ int Eaubut = 50 ;
 int Cafebut = 51 ;
 int Sucrebut = 52 ;
 int Confirmationbut = 53 ;
+int posLEDEau ;
+int posLEDCafe ;
+int posLEDSucre ;
 
 //init variables commandes :
 int confirmation = 0 ;
@@ -40,7 +43,7 @@ void setup() {
   
   Cafe.setSpeed(100) ;
   Sucre.setSpeed(100) ;
-
+  
   //Setup sélection dose :
   StateCommG[0] = 1 ;
   StateCommG[1] = 1 ;
@@ -62,10 +65,14 @@ void setup() {
   DosesSucreRe[2] = 200 ;
   DosesSucreRe[3] = 300 ;
 
-
-  for (i = 22; i <= 24; i++) {
+  //Setup LED de selection :
+  for (i=22; i<=35 ; i++) {
     pinMode(i, OUTPUT) ;
   }
+  digitalWrite(22, HIGH) ;
+  digitalWrite(27,HIGH) ;
+  digitalWrite(30, HIGH) ;
+  digitalWrite(34, HIGH) ;
 
   for (i = 0; i <= 3; i++) {
     lastButState[i] = 0 ;
@@ -75,34 +82,56 @@ void setup() {
   pinMode(Cafebut, INPUT) ;
   pinMode(Sucrebut, INPUT) ;
   pinMode(Confirmationbut, OUTPUT) ;
+  
   Serial.println("Fin Setup") ;
 }
 
 void ModStateComm(int Eau, int Cafe, int Sucre){ //fonction de changement des states de doses pour la commande manuelle
-
+  digitalWrite(posLEDEau, LOW) ;
+  digitalWrite(posLEDCafe, LOW) ;
+  digitalWrite(posLEDSucre, LOW) ;
+  
   if (Eau == 1) {
+    posLEDEau++ ;
     if (StateCommG[0] < 5)
       StateCommG[0]++ ;
     else
       StateCommG[0] = 1 ;
+    if(posLEDEau == 27){
+      posLEDEau = 22 ;
+    }
   }
   if (Cafe == 1) {
+    posLEDCafe++ ;
     if (StateCommG[1] < 3) {
       StateCommG[1]++ ;
     }
-    else b 
+    else
       StateCommG[1] = 1 ;
+    if(posLEDCafe == 30){
+      posLEDCafe = 27 ;
+    }
   }
   if (Sucre == 1) {
+    posLEDSucre++ ;
     if (StateCommG[2] < 3) {
       StateCommG[2]++ ;
     }
     else
       StateCommG[2] = 0 ;
+    if(posLEDSucre == 34){
+      posLEDSucre = 30 ;
+    }
   }
+
+  digitalWrite(posLEDEau, HIGH) ;
+  digitalWrite(posLEDCafe, HIGH) ;
+  digitalWrite(posLEDSucre, HIGH) ;
 }
 
 void LancementComm(int Eau, int Cafe, int Sucre){//fonction de lancement d'une commande
+  digitalWrite(34, LOW) ;
+  digitalWrite(35, HIGH) ;
   Serial.println("Lancement Commande...") ;
   Serial.print("- Nombre de doses d'eau : ") ;
   Serial.print(StateCommG[0]) ;
@@ -118,6 +147,8 @@ void LancementComm(int Eau, int Cafe, int Sucre){//fonction de lancement d'une c
   Serial.println(DosesSucreRe[Sucre]) ;
 
   delay(2000) ;
+  digitalWrite(34, HIGH) ;
+  digitalWrite(35, LOW) ;
   Serial.println("Cafe pret ! (what else ?)") ;
 }
 
