@@ -40,13 +40,14 @@ void SwitchCafe(){
 
   digitalWrite(posLEDEau, HIGH) ;
   digitalWrite(posLEDCafe, HIGH) ;
-                             digitalWrite(posLEDSucre, HIGH) ;
+  digitalWrite(posLEDSucre, HIGH) ;
   Serial.print("posLEDEau : ") ;
   Serial.print(posLEDEau) ;
   Serial.print(" , posLEDCafe : ") ;
   Serial.print(posLEDCafe) ;
   Serial.print(" , posLEDSucre : ") ;
   Serial.println(posLEDSucre) ;
+  delay(200) ;
 }
 
 void loop() {

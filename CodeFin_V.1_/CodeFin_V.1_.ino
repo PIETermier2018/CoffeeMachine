@@ -1,4 +1,3 @@
-//#include <SoftwareSerial.h>
 #include <AFMotor.h>
 
 //init port Serie bluetooth
@@ -15,9 +14,12 @@ int Eaubut = 50 ;
 int Cafebut = 51 ;
 int Sucrebut = 52 ;
 int Confirmationbut = 53 ;
-int posLEDEau ;
-int posLEDCafe ;
-int posLEDSucre ;
+int electroV1 = 36 ;
+int electroV2 = 37 ;
+int resChauff = 38 ;
+int posLEDEau = 22 ;
+int posLEDCafe = 27 ;
+int posLEDSucre = 30 ;
 
 //init variables commandes :
 int confirmation = 0 ;
@@ -31,9 +33,10 @@ int StateCommG[3] ;
 int DosesCafeRe[3] ;
 int DosesSucreRe[4] ;
 long TempsChauff[5] ;
+long TempsEc[5] ;
 
-AF_Stepper Cafe(1, 200) ;
-AF_Stepper Sucre(2, 200) ;
+AF_Stepper Cafe(200, 1) ;
+AF_Stepper Sucre(200, 2) ;
 
 
 void setup() {
@@ -43,6 +46,8 @@ void setup() {
   
   Cafe.setSpeed(100) ;
   Sucre.setSpeed(100) ;
+  Cafe.release() ;
+  Sucre.release() ;
   
   //Setup sélection dose :
   StateCommG[0] = 1 ;
@@ -55,6 +60,12 @@ void setup() {
   TempsChauff[2] = 753300 ;
   TempsChauff[3] = 1004400 ;
   TempsChauff[4] = 1255500 ;
+
+  TempsEc[0] = 16000 ;
+  TempsEc[1] = 32000 ;
+  TempsEc[2] = 48000 ;
+  TempsEc[3] = 64000 ;
+  TempsEc[4] = 80000 ;
 
   DosesCafeRe[0] = 100 ;
   DosesCafeRe[1] = 200 ;
@@ -78,10 +89,14 @@ void setup() {
     lastButState[i] = 0 ;
   }
 
+  //setup reste :
   pinMode(Eaubut, INPUT) ;
   pinMode(Cafebut, INPUT) ;
   pinMode(Sucrebut, INPUT) ;
   pinMode(Confirmationbut, OUTPUT) ;
+  pinMode(electroV1, OUTPUT) ;
+  pinMode(electroV2, OUTPUT) ;
+  pinMode(resChauff, OUTPUT) ;
   
   Serial.println("Fin Setup") ;
 }
@@ -92,36 +107,39 @@ void ModStateComm(int Eau, int Cafe, int Sucre){ //fonction de changement des st
   digitalWrite(posLEDSucre, LOW) ;
   
   if (Eau == 1) {
-    posLEDEau++ ;
     if (StateCommG[0] < 5)
       StateCommG[0]++ ;
     else
       StateCommG[0] = 1 ;
-    if(posLEDEau == 27){
-      posLEDEau = 22 ;
-    }
   }
+    
   if (Cafe == 1) {
-    posLEDCafe++ ;
     if (StateCommG[1] < 3) {
       StateCommG[1]++ ;
     }
     else
       StateCommG[1] = 1 ;
-    if(posLEDCafe == 30){
-      posLEDCafe = 27 ;
-    }
   }
   if (Sucre == 1) {
-    posLEDSucre++ ;
     if (StateCommG[2] < 3) {
       StateCommG[2]++ ;
     }
     else
       StateCommG[2] = 0 ;
-    if(posLEDSucre == 34){
-      posLEDSucre = 30 ;
-    }
+  }
+
+  posLEDEau++ ;
+  posLEDCafe ++ ;
+  posLEDSucre ++ ;
+  
+  if(posLEDEau == 27){
+    posLEDEau = 22 ;
+  }
+  if(posLEDCafe == 30){
+    posLEDCafe = 27 ;
+  }
+  if(posLEDSucre == 34){
+    posLEDSucre = 30 ;
   }
 
   digitalWrite(posLEDEau, HIGH) ;
@@ -129,10 +147,13 @@ void ModStateComm(int Eau, int Cafe, int Sucre){ //fonction de changement des st
   digitalWrite(posLEDSucre, HIGH) ;
 }
 
-void LancementComm(int Eau, int Cafe, int Sucre){//fonction de lancement d'une commande
+void LancementComm(int Eau, int Cafe, int Sucre){//fonction de lancement d'une commande  
+  //Stats :
   digitalWrite(34, LOW) ;
   digitalWrite(35, HIGH) ;
   Serial.println("Lancement Commande...") ;
+  Serial.print("- Temps pour ecoulement entre electrovannes : ") ;
+  Serial.print(TempsEc[Eau-1]) ;
   Serial.print("- Nombre de doses d'eau : ") ;
   Serial.print(StateCommG[0]) ;
   Serial.print(" , temps de chauffe de : ") ;
@@ -146,10 +167,18 @@ void LancementComm(int Eau, int Cafe, int Sucre){//fonction de lancement d'une c
   Serial.print(" , nombre de pas : ") ;
   Serial.println(DosesSucreRe[Sucre]) ;
 
-  delay(2000) ;
-  digitalWrite(34, HIGH) ;
-  digitalWrite(35, LOW) ;
-  Serial.println("Cafe pret ! (what else ?)") ;
+/*  //Commandes :
+    //Verser eau :
+  digitalWrite(electroV2, LOW) ;
+  digitalWrite(electroV1, HIGH) ;
+  delay(TempsEc[Eau-1]) ;
+
+    //Chauffer Eau :
+  digitalWrite(electroV1, LOW) ;
+  digitalWrite(resChauff, HIGH) ;
+  delay(TempsChauff[Eau-1]) ;*/
+
+
 }
 
 /*void ModStateBlue(int State){//fonction de changement des states de doses de la commande bluetooth
@@ -174,6 +203,20 @@ void loop() {
   }
   if(confirmation == HIGH){
     LancementComm(StateCommG[0], StateCommG[1], StateCommG[2]) ;
+/*      //Distribuer poudre et verser Eau :
+    Cafe.step(DosesCafeRe[(StateCommG[1])-1], FORWARD, DOUBLE) ;
+    Cafe.release() ;
+    Sucre.step(DosesSucreRe[StateCommG[2]], FORWARD, DOUBLE) ;
+    Sucre.release() ;
+
+    digitalWrite(electroV2, HIGH) ;
+    delay(TempsEc[(StateCommG[0])-1]) ;
+    digitalWrite(electroV1, LOW) ;*/
+
+    digitalWrite(34, HIGH) ;
+    digitalWrite(35, LOW) ;
+    Serial.println("Cafe pret ! (what else ?)") ;
+    delay(2000) ;
   }
 
   lastButState[0] = butState[0] ;
