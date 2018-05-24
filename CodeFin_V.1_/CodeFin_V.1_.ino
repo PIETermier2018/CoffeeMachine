@@ -20,6 +20,8 @@ int resChauff = 38 ;
 int posLEDEau = 22 ;
 int posLEDCafe = 27 ;
 int posLEDSucre = 30 ;
+int lance = 34 ;
+int pret = 35 ;
 
 //init variables commandes :
 int confirmation = 0 ;
@@ -80,10 +82,10 @@ void setup() {
   for (i=22; i<=35 ; i++) {
     pinMode(i, OUTPUT) ;
   }
-  digitalWrite(22, HIGH) ;
-  digitalWrite(27,HIGH) ;
-  digitalWrite(30, HIGH) ;
-  digitalWrite(34, HIGH) ;
+  digitalWrite(posLEDEau, HIGH) ;
+  digitalWrite(posLEDCafe, HIGH) ;
+  digitalWrite(posLEDSucre, HIGH) ;
+  digitalWrite(pret, HIGH) ;
 
   for (i = 0; i <= 3; i++) {
     lastButState[i] = 0 ;
@@ -111,6 +113,10 @@ void ModStateComm(int Eau, int Cafe, int Sucre){ //fonction de changement des st
       StateCommG[0]++ ;
     else
       StateCommG[0] = 1 ;
+    posLEDEau++ ;
+    if(posLEDEau == 27){
+      posLEDEau = 22 ;
+    }
   }
     
   if (Cafe == 1) {
@@ -119,6 +125,10 @@ void ModStateComm(int Eau, int Cafe, int Sucre){ //fonction de changement des st
     }
     else
       StateCommG[1] = 1 ;
+    posLEDCafe++ ;
+    if(posLEDCafe == 30){
+      posLEDCafe = 27 ;
+    }
   }
   if (Sucre == 1) {
     if (StateCommG[2] < 3) {
@@ -126,22 +136,11 @@ void ModStateComm(int Eau, int Cafe, int Sucre){ //fonction de changement des st
     }
     else
       StateCommG[2] = 0 ;
+    posLEDSucre++ ;
+    if(posLEDSucre == 34){
+      posLEDSucre = 30 ;
+    }
   }
-
-  posLEDEau++ ;
-  posLEDCafe ++ ;
-  posLEDSucre ++ ;
-  
-  if(posLEDEau == 27){
-    posLEDEau = 22 ;
-  }
-  if(posLEDCafe == 30){
-    posLEDCafe = 27 ;
-  }
-  if(posLEDSucre == 34){
-    posLEDSucre = 30 ;
-  }
-
   digitalWrite(posLEDEau, HIGH) ;
   digitalWrite(posLEDCafe, HIGH) ;
   digitalWrite(posLEDSucre, HIGH) ;
