@@ -86,6 +86,7 @@ void setup() {
   digitalWrite(posLEDCafe, HIGH) ;
   digitalWrite(posLEDSucre, HIGH) ;
   digitalWrite(pret, HIGH) ;
+  digitalWrite(lance, LOW) ;
 
   for (i = 0; i <= 3; i++) {
     lastButState[i] = 0 ;
@@ -148,8 +149,9 @@ void ModStateComm(int Eau, int Cafe, int Sucre){ //fonction de changement des st
 
 void LancementComm(int Eau, int Cafe, int Sucre){//fonction de lancement d'une commande  
   //Stats :
-  digitalWrite(34, LOW) ;
-  digitalWrite(35, HIGH) ;
+
+  digitalWrite(pret, LOW) ;
+  digitalWrite(lance, HIGH) ;
   Serial.println("Lancement Commande...") ;
   Serial.print("- Temps pour ecoulement entre electrovannes : ") ;
   Serial.print(TempsEc[Eau-1]) ;
@@ -189,6 +191,8 @@ void loop() {
   butState[1] = digitalRead(Cafebut) ;
   butState[2] = digitalRead(Sucrebut) ;
   confirmation = digitalRead(Confirmationbut) ;
+
+  digitalWrite(pret, HIGH) ;
   //  blueState = blue.read() ;
 
   /*  if(blueState != -1){
@@ -211,9 +215,6 @@ void loop() {
     digitalWrite(electroV2, HIGH) ;
     delay(TempsEc[(StateCommG[0])-1]) ;
     digitalWrite(electroV1, LOW) ;*/
-
-    digitalWrite(34, HIGH) ;
-    digitalWrite(35, LOW) ;
     Serial.println("Cafe pret ! (what else ?)") ;
     delay(2000) ;
   }

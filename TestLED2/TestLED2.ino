@@ -1,6 +1,7 @@
 int posLEDEau = 22 ;
 int posLEDCafe = 27 ;
 int posLEDSucre = 30 ;
+int posLEDConf = 34 ;
 int Confirmation = 36 ;
 int i ;
 
@@ -23,10 +24,12 @@ void SwitchCafe(){
   digitalWrite(posLEDEau, LOW) ;
   digitalWrite(posLEDCafe, LOW) ;
   digitalWrite(posLEDSucre, LOW) ;
+  digitalWrite(posLEDConf, LOW) ;
   
   posLEDEau++ ;
   posLEDCafe++ ;
   posLEDSucre++ ;
+  posLEDConf++ ;
 
   if(posLEDEau == 27){
     posLEDEau = 22 ;
@@ -37,10 +40,14 @@ void SwitchCafe(){
   if(posLEDSucre == 34){
     posLEDSucre = 30 ;
   }
+  if(posLEDConf == 36){
+    posLEDConf = 34 ;
+  }
 
   digitalWrite(posLEDEau, HIGH) ;
   digitalWrite(posLEDCafe, HIGH) ;
   digitalWrite(posLEDSucre, HIGH) ;
+  digitalWrite(posLEDConf, HIGH) ;
   Serial.print("posLEDEau : ") ;
   Serial.print(posLEDEau) ;
   Serial.print(" , posLEDCafe : ") ;
