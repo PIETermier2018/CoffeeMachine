@@ -46,8 +46,8 @@ void setup() {
   Serial.println("") ;
   Serial.println("Setup...") ;
   
-  Cafe.setSpeed(150) ;
-  Sucre.setSpeed(150) ;
+  Cafe.setSpeed(100) ;
+  Sucre.setSpeed(100) ;
   Cafe.release() ;
   Sucre.release() ;
   
@@ -69,14 +69,14 @@ void setup() {
   TempsEc[3] = 64000 ;
   TempsEc[4] = 80000 ;
 
-  DosesCafeRe[0] = 100 ;
-  DosesCafeRe[1] = 200 ;
-  DosesCafeRe[2] = 300 ;
+  DosesCafeRe[0] = 1000 ;
+  DosesCafeRe[1] = 2000 ;
+  DosesCafeRe[2] = 3000 ;
 
   DosesSucreRe[0] = 0 ;
-  DosesSucreRe[1] = 100 ;
-  DosesSucreRe[2] = 200 ;
-  DosesSucreRe[3] = 300 ;
+  DosesSucreRe[1] = 1000 ;
+  DosesSucreRe[2] = 2000 ;
+  DosesSucreRe[3] = 3000 ;
 
   //Setup LED de selection :
   for (i=22; i<=35 ; i++) {
@@ -87,6 +87,9 @@ void setup() {
   digitalWrite(posLEDSucre, HIGH) ;
   digitalWrite(pret, HIGH) ;
   digitalWrite(lance, LOW) ;
+  digitalWrite(electroV1, LOW) ;
+  digitalWrite(electroV2, LOW) ;
+  digitalWrite(resChauff, LOW) ;
 
   for (i = 0; i <= 3; i++) {
     lastButState[i] = 0 ;
@@ -216,14 +219,14 @@ void loop() {
     
     //Commande moteur PP :
     Serial.println("distribution poudres...") ;
-    Serial.print(" - Cafe, nbr pas : ") ;
+    Serial.print("- Cafe, nbr pas : ") ;
     Serial.println(DosesCafeRe[(StateCommG[1]-1)]) ;
     
     Cafe.step(DosesCafeRe[(StateCommG[1]-1)], FORWARD, DOUBLE) ;
     Cafe.release() ;
     
     Serial.println("release cafe") ;
-    Serial.print(" - Sucre, nrb pas : ") ;
+    Serial.print("- Sucre, nrb pas : ") ;
     Serial.println(DosesSucreRe[StateCommG[2]]) ;
     
     Sucre.step(DosesSucreRe[StateCommG[2]], FORWARD, DOUBLE) ;
