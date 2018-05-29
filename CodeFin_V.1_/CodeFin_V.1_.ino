@@ -88,7 +88,7 @@ void setup() {
   digitalWrite(pret, HIGH) ;
   digitalWrite(lance, LOW) ;
   digitalWrite(electroV1, LOW) ;
-  digitalWrite(electroV2, LOW) ;
+  digitalWrite(electroV2, HIGH) ;
   digitalWrite(resChauff, LOW) ;
 
   for (i = 0; i <= 3; i++) {
