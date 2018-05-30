@@ -10,12 +10,12 @@ void setup() {
   Serial.println("Stepper test!");
   
   cafe.setSpeed(100);
-  sucre.setSpeed(100);
+  sucre.setSpeed(90);
 }
  
 void loop() {
-  cafe.step(5000, FORWARD, DOUBLE) ;
-  cafe.release() ;
+//  cafe.step(5000, FORWARD, DOUBLE) ;
+//  cafe.release() ;
   sucre.step(5000, FORWARD, DOUBLE) ;
   sucre.release() ;
   delay(1000) ;
